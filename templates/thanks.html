@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Thanks</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+    <div class="App">
+        <header class="App-header">
+            <p>Thank you for visiting our Flask application!</p>
+            <nav>
+                <a href="{{ url_for('home') }}" class="button">Go Back to Home</a>
+            </nav>
+        </header>
+    </div>
+</body>
+</html>
