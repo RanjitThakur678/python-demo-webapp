@@ -1,17 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Thanks</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <style>
+        body {
+            background-color: #2e3b4e; /* Dark blue background */
+            font-family: Arial, sans-serif;
+            color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        h1 {
+            color: #f5a623;
+            font-size: 3rem;
+        }
+
+        p {
+            color: #f5f5f5;
+            font-size: 1.2rem;
+        }
+
+        a {
+            color: #ffffff;
+            background-color: #f5a623;
+            padding: 10px 20px;
+            font-weight: bold;
+            border-radius: 5px;
+            font-size: 1.1em;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        a:hover {
+            background-color: #e5932f;
+        }
+
+        .sparkle {
+            position: relative;
+            font-size: 2rem;
+            color: #f5a623;
+            cursor: pointer;
+        }
+
+        .sparkle:after {
+            content: " ✨";
+            font-size: 3rem;
+            position: absolute;
+            left: 20px;
+            animation: sparkle-animation 1.5s infinite;
+        }
+
+        @keyframes sparkle-animation {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="App">
-        <header class="App-header">
-            <p>Thank you for visiting our Flask application!</p>
-            <nav>
-                <a href="{{ url_for('home') }}" class="button">Go Back to Home</a>
-            </nav>
-        </header>
+
+    <div class="container">
+        <h1>Thank You for Visiting!</h1>
+        <p>Your visit means a lot to us. We hope you enjoyed your stay!</p>
+
+        <p class="sparkle" id="backLink">Back to Home Page</p>
     </div>
+
+    <script>
+        document.getElementById("backLink").onclick = function() {
+            window.location.href = "/";
+        };
+
+        // Dynamic sparkle effect on hover
+        document.querySelector('.sparkle').addEventListener('mouseover', function() {
+            const sparkleEffect = document.createElement('div');
+            sparkleEffect.textContent = '✨';
+            sparkleEffect.style.position = 'absolute';
+            sparkleEffect.style.left = `${Math.random() * 100}%`;
+            sparkleEffect.style.animation = 'sparkle-animation 1.5s infinite';
+            document.body.appendChild(sparkleEffect);
+            setTimeout(() => {
+                sparkleEffect.remove();
+            }, 1500);
+        });
+    </script>
 </body>
 </html>
