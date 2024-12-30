@@ -1,45 +1,59 @@
-body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-        sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-        monospace;
-}
-
-.App {
-    text-align: center;
-}
-
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
-}
-
-.App-header {
-    background-color: #282c34;
-    min-height: 100vh;
+/* Container for rocket animation */
+.rocket-container {
+    position: relative;
+    height: 200px;
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+    align-items: flex-end;
+    overflow: hidden;
 }
 
-.App-link {
-    color: #61dafb;
+/* Rocket style */
+.rocket {
+    width: 50px;
+    height: 100px;
+    background-color: #ff8c99; /* Rocket color */
+    border-radius: 10px;
+    position: absolute;
+    bottom: 0;
+    animation: launch 3s ease-out;
 }
 
-.heart {
-    color: #ff0000;
+.smoke {
+    width: 40px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    margin-left: -20px;
+    opacity: 0;
+    animation: smoke 3s ease-out infinite;
 }
 
-.small {
-    font-size: 0.75rem;
+@keyframes launch {
+    0% {
+        bottom: 0;
+        transform: translateY(0);
+    }
+    100% {
+        bottom: 100%;
+        transform: translateY(-300px);
+    }
+}
+
+@keyframes smoke {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+    50% {
+        opacity: 0.4;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(2);
+    }
 }
