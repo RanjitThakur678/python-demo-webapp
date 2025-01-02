@@ -1,4 +1,4 @@
-name: Build and Deploy to Azure
+name: Build and Deploy to Azure webapp
 
 on:
   push:
@@ -27,7 +27,7 @@ jobs:
 
       - name: Build and Tag Docker Image
         run: |
-          TAG=$(date +%Y%m%d%H%M%S) # Dynamic timestamp-based tag
+          # TAG=$(date +%Y%m%d%H%M%S) # Dynamic timestamp-based tag
           docker build -t "${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}" .
           echo "IMAGE_TAG=$TAG" >> $GITHUB_ENV
 
