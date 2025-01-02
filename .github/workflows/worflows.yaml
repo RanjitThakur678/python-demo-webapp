@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - docker-webapp
-
 env:
   IMAGE_NAME: python-flask-app
   RESOURCE_GROUP_NAME: "demo-webapp"
