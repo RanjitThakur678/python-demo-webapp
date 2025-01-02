@@ -61,7 +61,7 @@ jobs:
       - name: Deploy Docker Image to Azure Web App
         run: |
           az webapp config container set \
-            --name ${{ secrets.WEB_APP_NAME }} \
+            --name ${{ env.WEB_APP_NAME }} \
             --resource-group ${{ env.RESOURCE_GROUP_NAME }} \
             --docker-custom-image-name "${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}"
 
