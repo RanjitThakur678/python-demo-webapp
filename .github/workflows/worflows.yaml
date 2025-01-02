@@ -1,0 +1,70 @@
+name: Build and Deploy to Azure
+
+on:
+  push:
+    branches:
+      - docker-webapp
+
+env:
+  IMAGE_NAME: python-flask-app
+  RESOURCE_GROUP_NAME: "demo-webapp"
+  WEB_APP_NAME:  "demo-webapp-python"
+
+jobs:
+  # Build and Push Stage
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Log in to Azure Container Registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Build and Tag Docker Image
+        run: |
+          TAG=$(date +%Y%m%d%H%M%S) # Dynamic timestamp-based tag
+          docker build -t "${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}" .
+          echo "IMAGE_TAG=$TAG" >> $GITHUB_ENV
+
+      - name: Push Docker Image
+        run: |
+          docker push "${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}"
+
+      # - name: Save Image Tag as Output
+      #   id: save-tag
+      #   run: echo "::set-output name=image_tag::${{ env.IMAGE_TAG }}"
+        # Output image_tag for use in subsequent stages.
+
+  # Deploy Stage (Requires Approval)
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    environment:
+      name: dev
+      # Approval rules are configured in GitHub environments for 'production'.
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          creds: '{"clientId":"${{ secrets.AZURE_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_CLIENT_SECRET }}","subscriptionId":"${{ secrets.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.AZURE_TENANT_ID }}"}'
+
+
+      - name: Deploy Docker Image to Azure Web App
+        run: |
+          az webapp config container set \
+            --name ${{ secrets.WEB_APP_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP_NAME }} \
+            --docker-custom-image-name "${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}"
+
+      - name: Restart Web App
+        run: |
+          az webapp restart --name ${{ env.WEB_APP_NAME }} --resource-group ${{ env.RESOURCE_GROUP_NAME }}
